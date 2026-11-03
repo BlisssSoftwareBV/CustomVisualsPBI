@@ -15,13 +15,23 @@ export interface ChartSeries {
     data: ChartDatum[];
     trendShow: boolean;
     trendType: TrendType;
+    trendColor: string;
+    trendWidth: number;
+    trendDashed: boolean;
+    trendOpacity: number;
     format: (value: number) => string;
 }
+interface AxisStyle { show: boolean; title: boolean; fontSize: number; color: string }
 export interface ChartOptions {
     width: number; height: number;
     orientation: "bar" | "column";
     legend: boolean; labels: boolean; gridlines: boolean;
     fontSize: number; gap: number;
+    innerGap: number; columnOpacity: number;
+    categoryAxis: AxisStyle;
+    valueAxis: AxisStyle & { minimum: number | null; maximum: number | null; gridColor: string; gridWidth: number; gridDashed: boolean };
+    legendStyle: { position: "top" | "bottom"; fontSize: number; color: string; title: string; showTrends: boolean };
+    labelStyle: { position: "outside" | "inside" | "center"; fontSize: number; color: string };
     foreground: string; background: string; highContrast: boolean;
     trendShow: boolean; equation: boolean; r2: boolean; lineWidth: number; dashed: boolean;
     trend: Omit<TrendOptions, "type">;
@@ -57,15 +67,27 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
     if (options.legend) {
         const legend = document.createElement("div");
         legend.className = "chart-legend";
+        legend.style.order = options.legendStyle.position === "bottom" ? "3" : "0";
+        legend.style.fontSize = `${options.legendStyle.fontSize}px`;
+        legend.style.color = options.legendStyle.color;
+        if (options.legendStyle.title) {
+            const title = document.createElement("strong");
+            title.textContent = options.legendStyle.title;
+            legend.append(title);
+        }
         series.forEach((item, index) => {
             const entry = document.createElement("span");
             const swatch = document.createElement("i");
             swatch.style.backgroundColor = item.color;
+            swatch.style.opacity = String(options.columnOpacity);
             entry.append(swatch, document.createTextNode(item.name));
-            if (fits[index]?.points.length) {
+            if (options.legendStyle.showTrends && fits[index]?.points.length) {
                 const line = document.createElement("i");
                 line.className = "legend-line";
-                line.style.borderColor = item.color;
+                line.style.borderColor = item.trendColor;
+                line.style.borderTopWidth = `${item.trendWidth}px`;
+                line.style.borderTopStyle = item.trendDashed ? "dashed" : "solid";
+                line.style.opacity = String(item.trendOpacity);
                 entry.append(line, document.createTextNode(trendNames[item.trendType]));
             }
             legend.append(entry);
@@ -82,7 +104,7 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
         ].filter(Boolean);
         if (fragments.length) {
             const row = document.createElement("div");
-            row.style.borderLeftColor = series[index].color;
+            row.style.borderLeftColor = series[index].trendColor;
             row.textContent = `${series[index].name}: ${fragments.join("; ")}`;
             details.append(row);
         }
@@ -93,10 +115,16 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
     root.append(viewport);
     const bar = options.orientation === "bar";
     const count = series[0].data.length;
-    const margin = { top: 14, right: options.labels ? 70 : 26, bottom: bar ? 48 : 82, left: bar ? Math.min(150, options.width * 0.3) : 68 };
+    const horizontalAxis = bar ? options.valueAxis : options.categoryAxis;
+    const verticalAxis = bar ? options.categoryAxis : options.valueAxis;
+    const outsideLabels = options.labels && options.labelStyle.position === "outside";
+    const margin = { top: outsideLabels ? 24 : 14, right: outsideLabels && bar ? 70 : 20,
+        bottom: horizontalAxis.show ? (horizontalAxis.title ? 56 : 32) : 14,
+        left: verticalAxis.show ? (bar ? Math.min(160, Math.max(80, options.width * 0.3)) : (verticalAxis.title ? 88 : 64)) : 14 };
     const availableHeight = Math.max(130, options.height - (root.querySelector<HTMLElement>(".chart-legend")?.offsetHeight || 0) - details.offsetHeight);
     const width = Math.max(options.width, bar ? 280 : count * Math.max(38, series.length * 12) + margin.left + margin.right);
-    const height = bar ? Math.max(availableHeight, count * Math.max(28, series.length * 12) + margin.top + margin.bottom) : availableHeight;
+    const height = bar ? Math.max(availableHeight, count * Math.max(28, series.length * 12) + margin.top + margin.bottom)
+        : Math.max(130, availableHeight - (width > options.width ? 18 : 0));
     const plotWidth = Math.max(60, width - margin.left - margin.right);
     const plotHeight = Math.max(60, height - margin.top - margin.bottom);
     const svg = d3.select(viewport).append("svg").attr("width", width).attr("height", height)
@@ -108,7 +136,14 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
     let minimum = Math.min(0, ...finiteValues);
     let maximum = Math.max(0, ...finiteValues);
     if (minimum === maximum) { minimum -= 1; maximum += 1; }
-    const valueScale = d3.scaleLinear().domain([minimum, maximum]).nice().range(bar ? [0, plotWidth] : [plotHeight, 0]);
+    const requestedMinimum = options.valueAxis.minimum ?? minimum;
+    const requestedMaximum = options.valueAxis.maximum ?? maximum;
+    if (Number.isFinite(requestedMinimum) && Number.isFinite(requestedMaximum) && requestedMinimum < requestedMaximum) {
+        minimum = requestedMinimum;
+        maximum = requestedMaximum;
+    }
+    const valueScale = d3.scaleLinear().domain([minimum, maximum]).range(bar ? [0, plotWidth] : [plotHeight, 0]);
+    if (options.valueAxis.minimum === null && options.valueAxis.maximum === null) valueScale.nice();
     const hasForecast = fits.some((fit, index) => fit?.points.length && series[index].trendType !== "movingAverage");
     const categoryExtent = bar ? plotHeight : plotWidth;
     const allX = series.flatMap(item => item.data.map(datum => datum.x)).filter(Number.isFinite);
@@ -120,32 +155,53 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
     const categoryScale = d3.scaleBand<number>().domain(d3.range(count))
         .range([categoryExtent * backward / fullSpan, categoryExtent * (fullSpan - forward) / fullSpan])
         .paddingInner(Math.min(0.7, Math.max(0.05, options.gap / 100))).paddingOuter(0.12);
-    const innerScale = d3.scaleBand<number>().domain(d3.range(series.length)).range([0, categoryScale.bandwidth()]).padding(0.08);
+    const innerScale = d3.scaleBand<number>().domain(d3.range(series.length)).range([0, categoryScale.bandwidth()]).padding(Math.min(0.7, Math.max(0, options.innerGap / 100)));
     const categoryAxis = bar ? d3.axisLeft(categoryScale) : d3.axisBottom(categoryScale);
     const stride = Math.max(1, Math.ceil(count / ((bar ? plotHeight : plotWidth) / (bar ? 22 : 65))));
     categoryAxis.tickValues(d3.range(count).filter(index => index % stride === 0)).tickFormat(index => series[0].data[index].category);
     const categoryGroup = plot.append("g").attr("class", "category-axis")
-        .attr("transform", bar ? "translate(0,0)" : `translate(0,${plotHeight})`).call(categoryAxis);
+        .attr("transform", bar ? "translate(0,0)" : `translate(0,${plotHeight})`).call(categoryAxis)
+        .style("display", options.categoryAxis.show ? "" : "none").style("color", options.categoryAxis.color);
+    categoryGroup.selectAll("text").style("fill", options.categoryAxis.color).style("font-size", `${options.categoryAxis.fontSize}px`);
     categoryGroup.selectAll<SVGTextElement, number>("text").each(function(index) {
         const full = series[0].data[index].category;
-        const maximumCharacters = bar ? Math.max(5, Math.floor((margin.left - 15) / (options.fontSize * 0.6))) : 10;
+        const maximumCharacters = Math.max(3, Math.floor((bar ? margin.left - (options.categoryAxis.title ? 35 : 15) : categoryScale.step() * stride - 10) / (options.categoryAxis.fontSize * 0.6)));
         const label = d3.select(this);
         label.text(full.length > maximumCharacters ? `${full.slice(0, maximumCharacters - 3)}...` : full);
         label.append("title").text(full);
     });
     const valueAxis = bar ? d3.axisBottom(valueScale) : d3.axisLeft(valueScale);
     valueAxis.ticks(Math.max(2, Math.floor((bar ? plotWidth : plotHeight) / 85))).tickFormat(value => series[0].format(Number(value)));
-    plot.append("g").attr("class", "value-axis").attr("transform", bar ? `translate(0,${plotHeight})` : "translate(0,0)").call(valueAxis);
+    const valueGroup = plot.append("g").attr("class", "value-axis").attr("transform", bar ? `translate(0,${plotHeight})` : "translate(0,0)").call(valueAxis)
+        .style("display", options.valueAxis.show ? "" : "none").style("color", options.valueAxis.color);
+    valueGroup.selectAll("text").style("fill", options.valueAxis.color).style("font-size", `${options.valueAxis.fontSize}px`);
     if (options.gridlines) {
         const grid = bar ? d3.axisBottom(valueScale) : d3.axisLeft(valueScale);
         grid.ticks(Math.max(2, Math.floor((bar ? plotWidth : plotHeight) / 85))).tickSize(-(bar ? plotHeight : plotWidth)).tickFormat(() => "");
-        plot.append("g").attr("class", "gridlines").attr("transform", bar ? `translate(0,${plotHeight})` : "translate(0,0)").call(grid);
+        const gridGroup = plot.append("g").attr("class", "gridlines").attr("transform", bar ? `translate(0,${plotHeight})` : "translate(0,0)").call(grid);
+        gridGroup.selectAll(".tick line").style("stroke", options.valueAxis.gridColor).style("stroke-opacity", 1)
+            .style("stroke-width", options.valueAxis.gridWidth).style("stroke-dasharray", options.valueAxis.gridDashed ? "4,3" : "none");
     }
     plot.append("line").attr("class", "zero-line")
+        .style("display", minimum <= 0 && maximum >= 0 ? "" : "none")
         .attr("x1", bar ? valueScale(0) : 0).attr("x2", bar ? valueScale(0) : plotWidth)
         .attr("y1", bar ? 0 : valueScale(0)).attr("y2", bar ? plotHeight : valueScale(0));
-    svg.append("text").attr("class", "axis-title").attr("x", margin.left + plotWidth / 2).attr("y", height - 8)
-        .attr("text-anchor", "middle").text(bar ? options.valueTitle : options.categoryTitle);
+    if (horizontalAxis.show && horizontalAxis.title) svg.append("text").attr("class", "axis-title horizontal-title")
+        .attr("x", margin.left + plotWidth / 2).attr("y", height - 8).attr("text-anchor", "middle")
+        .style("fill", horizontalAxis.color).style("font-size", `${horizontalAxis.fontSize}px`).text(bar ? options.valueTitle : options.categoryTitle);
+    if (verticalAxis.show && verticalAxis.title) svg.append("text").attr("class", "axis-title vertical-title")
+        .attr("transform", `translate(16,${margin.top + plotHeight / 2}) rotate(-90)`).attr("text-anchor", "middle")
+        .style("fill", verticalAxis.color).style("font-size", `${verticalAxis.fontSize}px`).text(bar ? options.categoryTitle : options.valueTitle);
+    svg.selectAll<SVGTextElement, unknown>(".axis-title").each(function() {
+        const text = d3.select(this);
+        const full = text.text();
+        const limit = Math.max(3, Math.floor((this.classList.contains("vertical-title") ? plotHeight : plotWidth) / (Number.parseFloat(this.style.fontSize) * 0.6)));
+        if (full.length > limit) text.text(`${full.slice(0, limit - 3)}...`);
+        text.append("title").text(full);
+    });
+    const clipId = `trend-clip-${renderSequence++}`;
+    plot.append("defs").append("clipPath").attr("id", clipId).append("rect").attr("width", plotWidth).attr("height", plotHeight);
+    const barLayer = plot.append("g").attr("class", "columns").attr("clip-path", `url(#${clipId})`);
     const hasHighlights = series.some(item => item.data.some(datum => datum.highlight !== undefined));
     series.forEach((item, seriesIndex) => {
         item.data.forEach((datum, index) => {
@@ -155,10 +211,10 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
             const rectangle = (value: number, highlight: boolean) => {
                 const start = Math.min(valueScale(0), valueScale(value));
                 const length = Math.max(0.5, Math.abs(valueScale(value) - valueScale(0)));
-                const rect = plot.append("rect").datum(datum).attr("class", highlight ? "highlight-bar" : "data-bar")
+                const rect = barLayer.append("rect").datum(datum).attr("class", highlight ? "highlight-bar" : "data-bar")
                     .attr("x", bar ? start : position).attr("y", bar ? position : start)
                     .attr("width", bar ? length : thickness).attr("height", bar ? thickness : length)
-                    .attr("fill", item.color).attr("opacity", !highlight && hasHighlights ? 0.3 : 1)
+                    .attr("fill", item.color).attr("opacity", options.columnOpacity * (!highlight && hasHighlights ? 0.3 : 1))
                     .attr("stroke", options.highContrast ? options.foreground : "none");
                 rect.append("title").text(datum.tooltip.map(field => `${field.displayName}: ${field.value}`).join("\n"));
                 if (!highlight) {
@@ -175,16 +231,24 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
             rectangle(datum.value, false);
             if (typeof datum.highlight === "number" && Number.isFinite(datum.highlight)) rectangle(datum.highlight, true);
             if (options.labels && thickness >= 10) {
+                const direction = datum.value >= 0 ? 1 : -1;
+                const baseline = valueScale(0);
+                const endpoint = valueScale(datum.value);
+                const labelText = item.format(datum.value);
+                const labelWidth = labelText.length * options.labelStyle.fontSize * 0.6;
+                const inside = options.labelStyle.position !== "outside";
+                if (datum.value < minimum || datum.value > maximum || (!bar && labelWidth > thickness - 2)
+                    || (inside && Math.abs(endpoint - baseline) < (bar ? labelWidth + 10 : options.labelStyle.fontSize + 8))) return;
+                const labelPosition = options.labelStyle.position === "center" ? (baseline + endpoint) / 2
+                    : endpoint + (inside ? -1 : 1) * direction * (bar ? 5 : -options.labelStyle.fontSize / 2 - 4);
                 plot.append("text").attr("class", "data-label")
-                    .attr("x", bar ? valueScale(datum.value) + (datum.value >= 0 ? 4 : -4) : position + thickness / 2)
-                    .attr("y", bar ? position + thickness / 2 : valueScale(datum.value) + (datum.value >= 0 ? -5 : 12))
-                    .attr("dy", bar ? "0.35em" : "0").attr("text-anchor", bar ? (datum.value >= 0 ? "start" : "end") : "middle")
-                    .text(item.format(datum.value));
+                    .attr("x", bar ? labelPosition : position + thickness / 2)
+                    .attr("y", bar ? position + thickness / 2 : labelPosition)
+                    .attr("dy", "0.35em").attr("text-anchor", bar && options.labelStyle.position !== "center" ? (direction * (inside ? -1 : 1) > 0 ? "start" : "end") : "middle")
+                    .style("fill", options.labelStyle.color).style("font-size", `${options.labelStyle.fontSize}px`).text(labelText);
             }
         });
     });
-    const clipId = `trend-clip-${renderSequence++}`;
-    plot.append("defs").append("clipPath").attr("id", clipId).append("rect").attr("width", plotWidth).attr("height", plotHeight);
     const trendLayer = plot.append("g").attr("clip-path", `url(#${clipId})`);
     fits.forEach((fit: TrendResult | null, index) => {
         if (!fit?.points.length) return;
@@ -202,8 +266,8 @@ export function renderChart(root: HTMLElement, series: ChartSeries[], options: C
         const line = d3.line<Point>().x(point => bar ? valueScale(point.y) : xToPosition(point.x))
             .y(point => bar ? xToPosition(point.x) : valueScale(point.y));
         const path = trendLayer.append("path").attr("class", "trend-line").attr("d", line(fit.points))
-            .attr("fill", "none").attr("stroke", series[index].color).attr("stroke-width", options.lineWidth)
-            .attr("stroke-dasharray", options.dashed ? "7,4" : "none");
+            .attr("fill", "none").attr("stroke", series[index].trendColor).attr("stroke-width", series[index].trendWidth)
+            .attr("stroke-opacity", series[index].trendOpacity).attr("stroke-dasharray", series[index].trendDashed ? "7,4" : "none");
         path.append("title").text(`${series[index].name}: ${fit.equation}${fit.r2 === null ? "" : `; R\u00b2 = ${fit.r2.toFixed(4)}`}`);
     });
     svg.on("click", () => options.onClear?.());

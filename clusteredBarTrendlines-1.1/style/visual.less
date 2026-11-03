@@ -19,13 +19,14 @@
         .legend-line { width: 18px; height: 0; border-top: 2px dashed; margin-left: 6px; }
     }
     .trend-details {
+        order: 1;
         flex-shrink: 0;
         max-height: 28%;
         overflow: auto;
         padding: 0 10px 5px;
         div { border-left: 2px solid; padding: 3px 7px; margin-bottom: 2px; overflow-wrap: anywhere; }
     }
-    .chart-viewport { flex: 1; min-height: 0; overflow: auto; }
+    .chart-viewport { order: 2; flex: 1; min-height: 0; overflow: auto; }
     svg { display: block; font-family: inherit; }
     svg text { fill: currentColor; font-size: inherit; }
     .domain, .tick line { stroke: currentColor; stroke-opacity: 0.28; }
