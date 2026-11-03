@@ -1,0 +1,20 @@
+{
+  "visual": {
+    "name": "customRangeGaugeV12",
+    "displayName": "Custom Range Gauge V1.2",
+    "guid": "customRangeGaugeV12196B2A8CE956449DB66D367FEF0C37D3",
+    "visualClassName": "Visual",
+    "version": "1.2.0.0",
+    "description": "Segmented range gauge with target line, grouped formatting cards, Power BI font choices, and improved width use.",
+    "supportUrl": "https://community.fabric.microsoft.com/",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.11.0",
+  "author": { "name": "M365 Copilot for Emiel", "email": "noreply@example.com" },
+  "assets": { "icon": "assets/icon.png" },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": []
+}

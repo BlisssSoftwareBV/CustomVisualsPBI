@@ -1,0 +1,105 @@
+{
+  "dataRoles": [
+    { "displayName": "Actual value", "name": "actual", "kind": "Measure" },
+    { "displayName": "Tooltips", "name": "tooltips", "kind": "Measure" }
+  ],
+  "objects": {
+    "general": {
+      "properties": {
+        "shape": { "type": { "enumeration": [ { "value": "semi", "displayName": "Semi circle" }, { "value": "gauge270", "displayName": "270 degree" }, { "value": "full", "displayName": "Full circle" }, { "value": "bar", "displayName": "Bar" } ] } },
+        "segmentCount": { "type": { "integer": true } },
+        "valueType": { "type": { "enumeration": [ { "value": "number", "displayName": "Number" }, { "value": "percentage", "displayName": "Percentage" } ] } },
+        "percentInput": { "type": { "enumeration": [ { "value": "zeroToOne", "displayName": "0 to 1" }, { "value": "zeroToHundred", "displayName": "0 to 100" } ] } },
+        "scaleMode": { "type": { "enumeration": [ { "value": "equal", "displayName": "Equal segments" }, { "value": "linear", "displayName": "Linear" }, { "value": "log", "displayName": "Logarithmic" } ] } },
+        "showWarnings": { "type": { "bool": true } }
+      }
+    },
+    "segmentSelector": {
+      "properties": {
+        "selectedSegment": { "type": { "enumeration": [ { "value": "1", "displayName": "Segment 1" }, { "value": "2", "displayName": "Segment 2" }, { "value": "3", "displayName": "Segment 3" }, { "value": "4", "displayName": "Segment 4" }, { "value": "5", "displayName": "Segment 5" }, { "value": "6", "displayName": "Segment 6" }, { "value": "7", "displayName": "Segment 7" }, { "value": "8", "displayName": "Segment 8" }, { "value": "9", "displayName": "Segment 9" }, { "value": "10", "displayName": "Segment 10" } ] } }
+      }
+    },
+    "segmentLabels": {
+      "properties": {
+        "position": { "type": { "enumeration": [ { "value": "auto", "displayName": "Auto" }, { "value": "outside", "displayName": "Outside arc/bar" }, { "value": "inside", "displayName": "Inside segment" }, { "value": "below", "displayName": "Below visual" }, { "value": "none", "displayName": "Hide all segment labels" } ] } },
+        "fontFamily": { "type": { "enumeration": [ { "value": "Segoe UI", "displayName": "Segoe UI" }, { "value": "Arial", "displayName": "Arial" }, { "value": "Calibri", "displayName": "Calibri" }, { "value": "Verdana", "displayName": "Verdana" }, { "value": "Tahoma", "displayName": "Tahoma" }, { "value": "Trebuchet MS", "displayName": "Trebuchet MS" }, { "value": "Georgia", "displayName": "Georgia" }, { "value": "Times New Roman", "displayName": "Times New Roman" }, { "value": "Courier New", "displayName": "Courier New" } ] } },
+        "fontSize": { "type": { "numeric": true } },
+        "fontColor": { "type": { "fill": { "solid": { "color": true } } } },
+        "bold": { "type": { "bool": true } },
+        "italic": { "type": { "bool": true } },
+        "underline": { "type": { "bool": true } }
+      }
+    },
+    "marker": {
+      "properties": {
+        "show": { "type": { "bool": true } },
+        "color": { "type": { "fill": { "solid": { "color": true } } } },
+        "followsSegmentColor": { "type": { "bool": true } },
+        "style": { "type": { "enumeration": [ { "value": "line", "displayName": "Line" }, { "value": "pointer", "displayName": "Arrow pointer" }, { "value": "triangle", "displayName": "Triangle head" }, { "value": "dot", "displayName": "Dot on segment band" } ] } },
+        "theme": { "type": { "enumeration": [ { "value": "modern", "displayName": "Modern calm" }, { "value": "minimal", "displayName": "Minimal" }, { "value": "classic", "displayName": "Classic" } ] } },
+        "shadow": { "type": { "bool": true } },
+        "lineThickness": { "type": { "numeric": true } },
+        "headSize": { "type": { "numeric": true } },
+        "length": { "type": { "numeric": true } },
+        "opacity": { "type": { "numeric": true } }
+      }
+    },
+    "markerLabel": {
+      "properties": {
+        "show": { "type": { "bool": true } },
+        "position": { "type": { "enumeration": [ { "value": "center", "displayName": "Center" }, { "value": "atMarker", "displayName": "At marker" }, { "value": "below", "displayName": "Below" }, { "value": "above", "displayName": "Above" } ] } },
+        "fontFamily": { "type": { "enumeration": [ { "value": "Segoe UI", "displayName": "Segoe UI" }, { "value": "Arial", "displayName": "Arial" }, { "value": "Calibri", "displayName": "Calibri" }, { "value": "Verdana", "displayName": "Verdana" }, { "value": "Tahoma", "displayName": "Tahoma" }, { "value": "Trebuchet MS", "displayName": "Trebuchet MS" }, { "value": "Georgia", "displayName": "Georgia" }, { "value": "Times New Roman", "displayName": "Times New Roman" }, { "value": "Courier New", "displayName": "Courier New" } ] } },
+        "fontSize": { "type": { "numeric": true } },
+        "fontColor": { "type": { "fill": { "solid": { "color": true } } } },
+        "bold": { "type": { "bool": true } },
+        "italic": { "type": { "bool": true } },
+        "underline": { "type": { "bool": true } },
+        "decimalPlaces": { "type": { "integer": true } },
+        "prefix": { "type": { "text": true } },
+        "suffix": { "type": { "text": true } }
+      }
+    },
+    "targetLine": {
+      "properties": {
+        "show": { "type": { "bool": true } },
+        "value": { "type": { "numeric": true } },
+        "color": { "type": { "fill": { "solid": { "color": true } } } },
+        "thickness": { "type": { "numeric": true } },
+        "lineStyle": { "type": { "enumeration": [ { "value": "solid", "displayName": "Solid" }, { "value": "dash", "displayName": "Dashed" }, { "value": "dot", "displayName": "Dotted" } ] } },
+        "showLabel": { "type": { "bool": true } },
+        "label": { "type": { "text": true } }
+      }
+    },
+    "style": {
+      "properties": {
+        "backgroundColor": { "type": { "fill": { "solid": { "color": true } } } },
+        "segmentThickness": { "type": { "numeric": true } },
+        "segmentGap": { "type": { "numeric": true } },
+        "borderColor": { "type": { "fill": { "solid": { "color": true } } } },
+        "selectedOpacity": { "type": { "numeric": true } }
+      }
+    },
+    "interaction": {
+      "properties": {
+        "enableSelection": { "type": { "bool": true } },
+        "showTooltips": { "type": { "bool": true } }
+      }
+    },
+    "segment1": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment2": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment3": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment4": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment5": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment6": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment7": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment8": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment9": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } },
+    "segment10": { "properties": { "min": { "type": { "numeric": true } }, "max": { "type": { "numeric": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } }, "label": { "type": { "text": true } }, "showMin": { "type": { "bool": true } }, "showMax": { "type": { "bool": true } }, "showLabel": { "type": { "bool": true } } } }
+  },
+  "dataViewMappings": [
+    { "categorical": { "values": { "select": [ { "bind": { "to": "actual" } }, { "for": { "in": "tooltips" } } ] } } }
+  ],
+  "supportsHighlight": true,
+  "tooltips": { "supportedTypes": { "default": true, "canvas": true } },
+  "privileges": []
+}
