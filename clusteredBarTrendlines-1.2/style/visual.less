@@ -1,0 +1,43 @@
+.trend-visual {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
+    letter-spacing: 0;
+    * { box-sizing: border-box; }
+    .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        padding: 4px 6px;
+        max-height: 28%;
+        overflow: hidden;
+        flex-shrink: 0;
+        > span { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; white-space: nowrap; }
+        .legend-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        i { display: inline-block; width: 9px; height: 9px; flex-shrink: 0; }
+        .legend-line { width: 18px; height: 0; border-top: 2px dashed; }
+    }
+    .trend-details {
+        order: 1;
+        flex-shrink: 0;
+        max-height: 28%;
+        overflow: auto;
+        padding: 0 10px 5px;
+        div { border-left: 2px solid; padding: 3px 7px; margin-bottom: 2px; overflow-wrap: anywhere; }
+    }
+    .chart-viewport { order: 2; flex: 1; min-height: 0; min-width: 0; overflow: hidden; }
+    svg { display: block; font-family: inherit; }
+    svg text { fill: currentColor; font-size: inherit; }
+    .domain, .tick line { stroke: currentColor; stroke-opacity: 0.28; }
+    .gridlines .domain { display: none; }
+    .gridlines .tick line { stroke-opacity: 0.12; }
+    .zero-line { stroke: currentColor; stroke-opacity: 0.4; }
+    .category-axis .domain, .category-axis .tick line, .value-axis .domain, .value-axis .tick line { display: none; }
+    .data-bar { cursor: pointer; }
+    .data-bar:focus { outline: 2px solid currentColor; outline-offset: 2px; }
+    .data-label, .data-label-background { pointer-events: none; }
+    .trend-line { stroke-linejoin: round; }
+    .empty-state { margin: auto; padding: 20px; text-align: center; }
+}

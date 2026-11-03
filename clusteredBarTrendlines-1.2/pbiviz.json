@@ -1,0 +1,20 @@
+{
+  "visual": {
+    "name": "clusteredBarTrendlines",
+    "displayName": "Gegroepeerde kolommen met trendlijnen",
+    "guid": "clusteredBarTrendlinesA873EFC4235A498BADF96C534070C211",
+    "visualClassName": "Visual",
+    "version": "1.2.0.0",
+    "description": "Gegroepeerd staaf- en kolomdiagram met zes Excel-stijl trendlijnen per reeks.",
+    "supportUrl": "https://learn.microsoft.com/power-bi/developer/visuals/",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.11.0",
+  "author": { "name": "CustomVisualsPBI", "email": "development@example.invalid" },
+  "assets": { "icon": "assets/icon.png" },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": []
+}

@@ -1,0 +1,132 @@
+{
+  "dataRoles": [
+    { "name": "category", "displayName": "Categorie", "kind": "Grouping" },
+    { "name": "series", "displayName": "Legenda", "kind": "Grouping" },
+    { "name": "value", "displayName": "Waarden", "kind": "Measure" },
+    { "name": "x", "displayName": "Numerieke X voor trendlijn (optioneel)", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "tooltips", "displayName": "Tooltips", "kind": "Measure" }
+  ],
+  "dataViewMappings": [{
+    "conditions": [{ "category": { "min": 1, "max": 1 }, "series": { "max": 1 }, "value": { "max": 20 }, "x": { "max": 1 } }],
+    "categorical": {
+      "categories": { "for": { "in": "category" }, "dataReductionAlgorithm": { "top": { "count": 1000 } } },
+      "values": { "group": { "by": "series", "select": [
+        { "for": { "in": "value" } }, { "bind": { "to": "x" } }, { "for": { "in": "tooltips" } }
+      ], "dataReductionAlgorithm": { "top": { "count": 20 } } } }
+    }
+  }],
+  "objects": {
+    "chart": { "displayName": "Diagram", "properties": {
+      "orientation": { "type": { "enumeration": [{ "value": "bar", "displayName": "Horizontale balken" }, { "value": "column", "displayName": "Verticale kolommen" }] } },
+      "legend": { "type": { "bool": true } },
+      "labels": { "type": { "bool": true } },
+      "gridlines": { "type": { "bool": true } },
+      "fontSize": { "type": { "numeric": true } },
+      "decimals": { "type": { "numeric": true } },
+      "gap": { "type": { "numeric": true } },
+      "innerGap": { "type": { "numeric": true } },
+      "transparency": { "type": { "numeric": true } },
+      "displayUnits": { "type": { "enumeration": [
+        { "value": "none", "displayName": "Geen" }, { "value": "auto", "displayName": "Automatisch" },
+        { "value": "1000", "displayName": "Duizenden" }, { "value": "1000000", "displayName": "Miljoenen" },
+        { "value": "1000000000", "displayName": "Miljarden" }
+      ] } }
+    } },
+    "categoryAxis": { "displayName": "Categorie-as", "properties": {
+      "showAxisTitle": { "type": { "bool": true } }, "axisColor": { "type": { "fill": { "solid": { "color": true } } } },
+      "innerPadding": { "type": { "numeric": true } },
+      "show": { "type": { "bool": true } }, "title": { "type": { "bool": true } },
+      "titleText": { "type": { "text": true } }, "fontSize": { "type": { "numeric": true } },
+      "color": { "type": { "fill": { "solid": { "color": true } } } }
+    } },
+    "valueAxis": { "displayName": "Waarde-as", "properties": {
+      "showAxisTitle": { "type": { "bool": true } }, "axisColor": { "type": { "fill": { "solid": { "color": true } } } },
+      "labelDisplayUnits": { "type": { "numeric": true } }, "labelPrecision": { "type": { "numeric": true } },
+      "start": { "type": { "numeric": true } }, "end": { "type": { "numeric": true } },
+      "gridlineShow": { "type": { "bool": true } }, "gridlineColor": { "type": { "fill": { "solid": { "color": true } } } },
+      "gridlineThickness": { "type": { "numeric": true } }, "gridlineStyle": { "type": { "text": true } },
+      "show": { "type": { "bool": true } }, "title": { "type": { "bool": true } },
+      "titleText": { "type": { "text": true } }, "fontSize": { "type": { "numeric": true } },
+      "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "customMinimum": { "type": { "bool": true } }, "minimum": { "type": { "numeric": true } },
+      "customMaximum": { "type": { "bool": true } }, "maximum": { "type": { "numeric": true } },
+      "gridlines": { "type": { "bool": true } }, "gridColor": { "type": { "fill": { "solid": { "color": true } } } },
+      "gridWidth": { "type": { "numeric": true } }, "gridDashed": { "type": { "bool": true } }
+    } },
+    "legendStyle": { "displayName": "Legenda", "properties": {
+      "show": { "type": { "bool": true } }, "title": { "type": { "bool": true } },
+      "titleText": { "type": { "text": true } }, "fontSize": { "type": { "numeric": true } },
+      "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "showTrends": { "type": { "bool": true } },
+      "position": { "type": { "enumeration": [{ "value": "top", "displayName": "Boven" }, { "value": "bottom", "displayName": "Onder" }] } }
+    } },
+    "labelStyle": { "displayName": "Gegevenslabels", "properties": {
+      "background": { "type": { "bool": true } }, "backgroundColor": { "type": { "fill": { "solid": { "color": true } } } },
+      "show": { "type": { "bool": true } }, "fontSize": { "type": { "numeric": true } },
+      "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "position": { "type": { "enumeration": [
+        { "value": "outside", "displayName": "Buiten einde" }, { "value": "inside", "displayName": "Binnen einde" },
+        { "value": "center", "displayName": "Midden" }
+      ] } }
+    } },
+    "dataPoint": { "displayName": "Oorspronkelijke kolomkleuren", "properties": {
+      "defaultColor": { "type": { "fill": { "solid": { "color": true } } } }, "fill": { "type": { "fill": { "solid": { "color": true } } } }
+    } },
+    "labels": { "displayName": "Oorspronkelijke gegevenslabels", "properties": {
+      "show": { "type": { "bool": true } }, "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "fontSize": { "type": { "numeric": true } }, "labelPrecision": { "type": { "numeric": true } },
+      "labelPosition": { "type": { "text": true } }, "enableBackground": { "type": { "bool": true } },
+      "backgroundColor": { "type": { "fill": { "solid": { "color": true } } } }
+    } },
+    "legend": { "displayName": "Oorspronkelijke legenda", "properties": {
+      "show": { "type": { "bool": true } }, "showTitle": { "type": { "bool": true } }, "titleText": { "type": { "text": true } },
+      "fontSize": { "type": { "numeric": true } }, "position": { "type": { "text": true } },
+      "labelColor": { "type": { "fill": { "solid": { "color": true } } } }
+    } },
+    "trendStyle": { "displayName": "Trendlijnopmaak", "properties": {
+      "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "width": { "type": { "numeric": true } }, "transparency": { "type": { "numeric": true } },
+      "useDefaultStroke": { "type": { "bool": true } }, "show": { "type": { "bool": true } },
+      "dashed": { "type": { "bool": true } },
+      "type": { "type": { "enumeration": [
+        { "value": "default", "displayName": "Algemene instelling" },
+        { "value": "linear", "displayName": "Lineair" }, { "value": "exponential", "displayName": "Exponentieel" },
+        { "value": "logarithmic", "displayName": "Logaritmisch" }, { "value": "polynomial", "displayName": "Polynomiaal" },
+        { "value": "power", "displayName": "Macht" }, { "value": "movingAverage", "displayName": "Voortschrijdend gemiddelde" }
+      ] } }
+    } },
+    "trend": { "displayName": "Trendlijnen", "properties": {
+      "show": { "type": { "bool": true } },
+      "type": { "type": { "enumeration": [
+        { "value": "linear", "displayName": "Lineair" }, { "value": "exponential", "displayName": "Exponentieel" },
+        { "value": "logarithmic", "displayName": "Logaritmisch" }, { "value": "polynomial", "displayName": "Polynomiaal" },
+        { "value": "power", "displayName": "Macht" }, { "value": "movingAverage", "displayName": "Voortschrijdend gemiddelde" }
+      ] } },
+      "order": { "type": { "numeric": true } },
+      "period": { "type": { "numeric": true } },
+      "forward": { "type": { "numeric": true } },
+      "backward": { "type": { "numeric": true } },
+      "fixedIntercept": { "type": { "bool": true } },
+      "intercept": { "type": { "numeric": true } },
+      "equation": { "type": { "bool": true } },
+      "r2": { "type": { "bool": true } },
+      "width": { "type": { "numeric": true } },
+      "dashed": { "type": { "bool": true } }
+    } },
+    "seriesStyle": { "displayName": "Reeksen", "properties": {
+      "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "trendShow": { "type": { "bool": true } },
+      "trendType": { "type": { "enumeration": [
+        { "value": "default", "displayName": "Algemene instelling" },
+        { "value": "linear", "displayName": "Lineair" }, { "value": "exponential", "displayName": "Exponentieel" },
+        { "value": "logarithmic", "displayName": "Logaritmisch" }, { "value": "polynomial", "displayName": "Polynomiaal" },
+        { "value": "power", "displayName": "Macht" }, { "value": "movingAverage", "displayName": "Voortschrijdend gemiddelde" }
+      ] } }
+    } }
+  },
+  "supportsHighlight": true,
+  "supportsKeyboardFocus": true,
+  "sorting": { "default": {} },
+  "tooltips": { "supportedTypes": { "default": true, "canvas": true }, "roles": ["tooltips"] },
+  "privileges": []
+}
