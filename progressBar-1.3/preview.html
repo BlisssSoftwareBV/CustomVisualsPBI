@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Voortgangsbalk 1.3</title>
+    <style>
+        :root { font-family: "Segoe UI", sans-serif; color: #303b3b; background: #f3f5f4; font-synthesis: none; }
+        * { box-sizing: border-box; }
+        body { margin: 0; letter-spacing: 0; }
+        header { padding: 22px 32px 18px; background: #fff; border-bottom: 1px solid #dce1df; }
+        .heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+        h1 { font-size: 22px; font-weight: 600; margin: 0; }
+        .version { color: #61716b; font-size: 12px; }
+        .controls { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
+        label { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+        select, input[type="number"], input[type="text"] { font: inherit; background: #fff; border: 1px solid #b9c4bf; border-radius: 3px; padding: 6px 8px; min-height: 32px; }
+        select { max-width: 100%; }
+        input[type="number"] { width: 76px; }
+        input[type="text"] { width: 140px; min-width: 0; }
+        input[type="color"] { width: 30px; height: 28px; padding: 0; border: 0; background: transparent; }
+        input { accent-color: #16806a; }
+        input[type="range"] { width: 90px; }
+        output { min-width: 4ch; text-align: right; }
+        main { max-width: 1040px; margin: 28px auto; padding: 0 32px; }
+        .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 12px; }
+        h2 { font-size: 15px; font-weight: 600; margin: 0; }
+        #period { font-size: 12px; color: #61716b; }
+        #visual { background: white; border-top: 3px solid #16806a; height: 650px; width: 100%; }
+        .appearance { padding-top: 16px; border-top: 1px solid #dce1df; margin-top: 16px; }
+        @media (max-width: 600px) { header { padding: 18px 16px; } main { padding: 0 12px; margin-top: 18px; } .controls { gap: 10px 16px; } #visual { height: 740px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="heading"><h1>Voortgangsbalk</h1><span class="version">1.3</span></div>
+        <div class="controls">
+            <label>Weergave <select id="dataset"><option value="dimension">Per afdeling</option><option value="total">Totaal</option><option value="percent">Percentages</option><option value="steps">Stappen (0-5)</option><option value="edge">Grensgevallen</option></select></label>
+            <label>Kleurmodus <select id="mode"><option value="gradient">Verloop over de balk</option><option value="blend">Meekleurende balk</option><option value="status">Statuskleuren</option></select></label>
+            <label>Bodem <input id="minimum" type="number" value="0" step="any"></label>
+            <label>Top <input id="maximum" type="number" value="100" step="any"></label>
+            <label>Target <input id="target" type="number" value="80" step="any"></label>
+        </div>
+        <div class="controls appearance">
+            <label>Bodemkleur <input id="startColor" type="color" value="#c74c3c"></label>
+            <label>Tussenkleur <input id="midpointColor" type="color" value="#e4be36"></label>
+            <label>Targetkleur <input id="targetColor" type="color" value="#2ca25f"></label>
+            <label>Topkleur <input id="topColor" type="color" value="#16806a"></label>
+            <label><input id="fields" type="checkbox" checked> Bereik uit velden</label>
+            <label><input id="targetEnabled" type="checkbox" checked> Target</label>
+            <label><input id="overflow" type="checkbox" checked> Overschrijdingskleur</label>
+            <label><input id="message" type="checkbox" checked> Melding</label>
+            <label><input id="contrast" type="checkbox"> Hoog contrast</label>
+        </div>
+        <div class="controls appearance">
+            <label><input id="customRounding" type="checkbox"> Eigen afronding</label>
+            <label>Afronding <input id="rounding" type="range" min="0" max="100" value="100" disabled><output id="roundingValue" for="rounding">100%</output></label>
+            <label><input id="segmented" type="checkbox"> Stappen</label>
+            <label>Stapgrootte <input id="stepSize" type="number" min="0.000001" step="any" value="1" disabled></label>
+            <label>Eenheid <select id="stepUnit" disabled><option value="value">Meetwaarde</option><option value="percent">Percentage van bereik</option></select></label>
+            <label>Tussenruimte <input id="segmentGap" type="number" min="0" max="24" value="4" disabled> px</label>
+        </div>
+        <div class="controls appearance">
+            <label><input id="valueMatchColor" type="checkbox"> Actuele waarde meekleuren</label>
+            <label>Waardeplaatsing <select id="valuePosition"><option value="right">Rechts</option><option value="fill">Boven actuele voortgang</option></select></label>
+            <label>%-positie <select id="progressPosition"><option value="right">Rechtsboven</option><option value="center">Midden in de vulling</option><option value="end">Einde van de vulling</option></select></label>
+            <label><input id="showTargetTitle" type="checkbox" checked> Targettitel</label>
+            <label><input id="showTargetValue" type="checkbox" checked> Targetwaarde</label>
+            <label>Titeltekst <input id="targetTitle" type="text" value="Target"></label>
+        </div>
+    </header>
+    <main>
+        <div class="section-heading"><h2 id="chartTitle">Voortgang per afdeling</h2><span id="period">Jaarplan 2026</span></div>
+        <div id="visual"></div>
+    </main>
+    <script type="module" src="/preview/main.ts"></script>
+</body>
+</html>

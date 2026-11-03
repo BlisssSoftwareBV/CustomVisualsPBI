@@ -1,0 +1,88 @@
+{
+  "dataRoles": [
+    { "name": "category", "displayName": "Dimensie (optioneel)", "kind": "Grouping" },
+    { "name": "value", "displayName": "Voortgang", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "minimum", "displayName": "Bodem (optioneel)", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "maximum", "displayName": "Top (optioneel)", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "target", "displayName": "Target (optioneel)", "kind": "Measure", "requiredTypes": [{ "numeric": true }] },
+    { "name": "tooltips", "displayName": "Tooltips", "kind": "Measure" }
+  ],
+  "dataViewMappings": [{
+    "conditions": [{ "category": { "max": 1 }, "value": { "min": 1, "max": 1 }, "minimum": { "max": 1 }, "maximum": { "max": 1 }, "target": { "max": 1 } }],
+    "categorical": {
+      "categories": { "for": { "in": "category" }, "dataReductionAlgorithm": { "top": { "count": 1000 } } },
+      "values": { "select": [
+        { "bind": { "to": "value" } }, { "bind": { "to": "minimum" } },
+        { "bind": { "to": "maximum" } }, { "bind": { "to": "target" } }, { "for": { "in": "tooltips" } }
+      ] }
+    }
+  }],
+  "objects": {
+    "range": { "displayName": "Bereik en target", "properties": {
+      "minimum": { "type": { "numeric": true } }, "maximum": { "type": { "numeric": true } },
+      "targetEnabled": { "type": { "bool": true } }, "target": { "type": { "numeric": true } }
+    } },
+    "colors": { "displayName": "Kleuren", "properties": {
+      "mode": { "type": { "enumeration": [
+        { "value": "status", "displayName": "Statuskleuren" },
+        { "value": "blend", "displayName": "Meekleurende balk" },
+        { "value": "gradient", "displayName": "Verloop over de balk" }
+      ] } },
+      "start": { "type": { "fill": { "solid": { "color": true } } } },
+      "midpoint": { "type": { "fill": { "solid": { "color": true } } } },
+      "target": { "type": { "fill": { "solid": { "color": true } } } },
+      "top": { "type": { "fill": { "solid": { "color": true } } } },
+      "track": { "type": { "fill": { "solid": { "color": true } } } },
+      "marker": { "type": { "fill": { "solid": { "color": true } } } }
+    } },
+    "overflow": { "displayName": "Overschrijding", "properties": {
+      "recolor": { "type": { "bool": true } },
+      "color": { "type": { "fill": { "solid": { "color": true } } } },
+      "showMessage": { "type": { "bool": true } },
+      "message": { "type": { "text": true } }
+    } },
+    "labels": { "displayName": "Labels en opmaak", "properties": {
+      "progressPosition": { "type": { "enumeration": [
+        { "value": "right", "displayName": "Rechtsboven" }, { "value": "center", "displayName": "Midden in de vulling" },
+        { "value": "end", "displayName": "Einde van de vulling" }
+      ] } },
+      "valueMatchColor": { "type": { "bool": true } },
+      "valuePosition": { "type": { "enumeration": [
+        { "value": "right", "displayName": "Rechts" }, { "value": "fill", "displayName": "Boven actuele voortgang" }
+      ] } },
+      "showTargetTitle": { "type": { "bool": true } }, "showTargetValue": { "type": { "bool": true } },
+      "targetTitle": { "type": { "text": true } },
+      "format": { "type": { "enumeration": [
+        { "value": "auto", "displayName": "Veldopmaak" }, { "value": "number", "displayName": "Getal" },
+        { "value": "percent", "displayName": "Percentage (0 tot 1)" },
+        { "value": "percent100", "displayName": "Percentage (0 tot 100)" }
+      ] } },
+      "decimals": { "type": { "numeric": true } },
+      "showProgress": { "type": { "bool": true } }, "showBounds": { "type": { "bool": true } },
+      "showTarget": { "type": { "bool": true } },
+      "fontSize": { "type": { "numeric": true } },
+      "color": { "type": { "fill": { "solid": { "color": true } } } }
+    } },
+    "layout": { "displayName": "Balken", "properties": {
+      "customRounding": { "type": { "bool": true } }, "rounding": { "type": { "numeric": true } },
+      "segmented": { "type": { "bool": true } }, "stepSize": { "type": { "numeric": true } },
+      "stepUnit": { "type": { "enumeration": [
+        { "value": "value", "displayName": "Meetwaarde" }, { "value": "percent", "displayName": "Percentage van bereik" }
+      ] } },
+      "segmentGap": { "type": { "numeric": true } },
+      "barHeight": { "type": { "numeric": true } }, "spacing": { "type": { "numeric": true } },
+      "sort": { "type": { "enumeration": [
+        { "value": "data", "displayName": "Volgorde Power BI" },
+        { "value": "ascending", "displayName": "Voortgang oplopend" },
+        { "value": "descending", "displayName": "Voortgang aflopend" }
+      ] } }
+    } }
+  },
+  "supportsHighlight": true,
+  "supportsKeyboardFocus": true,
+  "supportsEmptyDataView": true,
+  "tooltips": { "supportedTypes": { "default": true } },
+  "sorting": { "default": {} },
+  "drilldown": { "roles": ["category"] },
+  "privileges": []
+}

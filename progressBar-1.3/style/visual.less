@@ -1,0 +1,41 @@
+.progress-visual {
+    box-sizing: border-box;
+    overflow: auto;
+    padding: 20px 24px;
+    color: var(--text, #303b3b);
+    background: var(--surface, transparent);
+    font-family: "Segoe UI", sans-serif;
+    font-size: var(--font-size, 12px);
+    letter-spacing: 0;
+
+    * { box-sizing: border-box; }
+    .progress-row { margin-bottom: var(--row-gap, 24px); min-width: 0; cursor: pointer; }
+    .progress-row:last-child { margin-bottom: 0; }
+    .progress-row:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+    .row-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 10px; }
+    .category { font-weight: 600; flex: 1 1 100px; overflow-wrap: anywhere; min-width: 0; }
+    .row-values { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; max-width: 100%; }
+    .actual-value { font-size: 1.25em; font-weight: 650; overflow-wrap: anywhere; min-width: 0; }
+    .progress-percent { opacity: 0.75; overflow-wrap: anywhere; }
+    .inside-progress { position: absolute; top: 50%; width: max-content; white-space: nowrap; line-height: 1; opacity: 1; z-index: 2; pointer-events: none; }
+    .anchored-label-lane { position: relative; margin-left: 1px; margin-right: 1px; min-width: 0; }
+    .anchored-label { position: relative; display: block; width: max-content; max-width: 100%; transform: translateX(-50%); overflow-wrap: anywhere; text-align: center; }
+    .actual-label-lane { margin-bottom: 8px; }
+    .target-label-lane { margin-top: 8px; font-size: 0.95em; }
+    .bar-track { position: relative; width: 100%; border: 1px solid transparent; border-radius: 3px; }
+    .bar-segment { position: absolute; top: 0; bottom: 0; overflow: hidden; border-radius: 3px; }
+    .bar-fill, .bar-highlight { position: absolute; inset: 0 auto 0 0; border-radius: 2px; }
+    .target-marker { position: absolute; top: -4px; bottom: -4px; width: 2px; transform: translateX(-1px); z-index: 1; }
+    .range-indicator { position: absolute; top: 50%; transform: translateY(-50%); font-size: 16px; font-weight: 700; }
+    .range-indicator.above { right: -15px; }
+    .range-indicator.below { left: -15px; }
+    .bounds { display: flex; justify-content: space-between; gap: 12px; margin-top: 7px; opacity: 0.72; font-size: 0.9em; }
+    .bounds span { min-width: 0; overflow-wrap: anywhere; }
+    .maximum { text-align: right; }
+    .row-footer { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-top: 7px; font-size: 0.95em; }
+    .row-footer span { overflow-wrap: anywhere; min-width: 0; }
+    .target-label { opacity: 0.8; }
+    .overflow-message { font-weight: 600; }
+    .data-warning { font-weight: 500; margin-top: 5px; overflow-wrap: anywhere; }
+    .empty-state { padding: 12px 0; overflow-wrap: anywhere; }
+}

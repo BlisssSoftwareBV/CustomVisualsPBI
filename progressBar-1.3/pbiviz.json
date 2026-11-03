@@ -1,0 +1,20 @@
+{
+  "visual": {
+    "name": "progressBar",
+    "displayName": "Voortgangsbalk",
+    "guid": "progressBarD273B40F8A624168A4B61C5DA760E219",
+    "visualClassName": "Visual",
+    "version": "1.3.0.0",
+    "description": "Voortgang totaal of per dimensie, met bodem, top, target en kleurverloop.",
+    "supportUrl": "https://learn.microsoft.com/power-bi/developer/visuals/",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.11.0",
+  "author": { "name": "CustomVisualsPBI", "email": "development@example.invalid" },
+  "assets": { "icon": "assets/icon.png" },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": []
+}
